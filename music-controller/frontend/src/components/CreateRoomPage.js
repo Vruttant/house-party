@@ -9,8 +9,9 @@ import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Collapse } from "@material-ui/core";
+import { Collapse, ButtonGroup } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+import { spacing } from "@material-ui/system";
 
 export default class CreateRoomPage extends Component {
   static defaultProps = {
@@ -88,8 +89,8 @@ export default class CreateRoomPage extends Component {
 
   renderCreateButtons() {
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={12} align="center">
+      <Grid item xs={12} align="center">
+        <ButtonGroup>
           <Button
             color="primary"
             variant="contained"
@@ -97,12 +98,10 @@ export default class CreateRoomPage extends Component {
           >
             Create A Room
           </Button>
-        </Grid>
-        <Grid item xs={12} align="center">
           <Button color="secondary" variant="contained" to="/" component={Link}>
             Back
           </Button>
-        </Grid>
+        </ButtonGroup>
       </Grid>
     );
   }
@@ -110,13 +109,15 @@ export default class CreateRoomPage extends Component {
   renderUpdateButtons() {
     return (
       <Grid item xs={12} align="center">
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={this.handleUpdateButtonPressed}
-        >
-          Update Room
-        </Button>
+        <ButtonGroup>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.handleUpdateButtonPressed}
+          >
+            Update Room
+          </Button>
+        </ButtonGroup>
       </Grid>
     );
   }
@@ -125,7 +126,7 @@ export default class CreateRoomPage extends Component {
     const title = this.props.update ? "Update Room" : "Create a Room";
 
     return (
-      <Grid container spacing={1}>
+      <Grid container spacing={3}>
         <Grid item xs={12} align="center">
           <Collapse
             in={this.state.errorMsg != "" || this.state.successMsg != ""}
@@ -168,15 +169,15 @@ export default class CreateRoomPage extends Component {
             >
               <FormControlLabel
                 value="true"
-                control={<Radio color="primary" />}
+                control={<Radio color="primary" size="small" />}
                 label="Play/Pause"
-                labelPlacement="bottom"
+                labelPlacement="end"
               />
               <FormControlLabel
                 value="false"
-                control={<Radio color="secondary" />}
+                control={<Radio color="secondary" size="small" />}
                 label="No Control"
-                labelPlacement="bottom"
+                labelPlacement="end"
               />
             </RadioGroup>
           </FormControl>
@@ -184,10 +185,14 @@ export default class CreateRoomPage extends Component {
         <Grid item xs={12} align="center">
           <FormControl>
             <TextField
+              variant="outlined"
               required={true}
               type="number"
               onChange={this.handleVotesChange}
               defaultValue={this.state.votesToSkip}
+              size="small"
+              label="Votes"
+              required={false}
               inputProps={{
                 min: 1,
                 style: { textAlign: "center" },

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Button, Typography } from "@material-ui/core";
+import { Grid, Button, Typography, ButtonGroup } from "@material-ui/core";
 import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
 
@@ -23,21 +23,6 @@ export default class Room extends Component {
     this.authenticateSpotify = this.authenticateSpotify.bind(this);
     this.getCurrentSong = this.getCurrentSong.bind(this);
     this.getRoomDetails();
-  }
-
-  getCurrentSong() {
-    fetch("/spotify/current-song")
-      .then((response) => {
-        if (!response.ok) {
-          return {};
-        } else {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        this.setState({ song: data });
-        console.log(data);
-      });
   }
 
   componentDidMount() {
@@ -69,6 +54,37 @@ export default class Room extends Component {
       });
   }
 
+  authenticateSpotify() {
+    fetch("/spotify/is-authenticated")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ spotifyAuthenticated: data.status });
+        console.log(data.status);
+        if (!data.status) {
+          fetch("/spotify/get-auth-url")
+            .then((response) => response.json())
+            .then((data) => {
+              window.location.replace(data.url);
+            });
+        }
+      });
+  }
+
+  getCurrentSong() {
+    fetch("/spotify/current-song")
+      .then((response) => {
+        if (!response.ok) {
+          return {};
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        this.setState({ song: data });
+        console.log(data);
+      });
+  }
+
   leaveButtonPressed() {
     const requestOptions = {
       method: "POST",
@@ -84,23 +100,6 @@ export default class Room extends Component {
     this.setState({
       showSettings: value,
     });
-  }
-
-  authenticateSpotify() {
-    fetch("/spotify/is-authenticated")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          spotifyAuthenticated: data.status,
-        });
-        if (!data.status) {
-          fetch("/spotify/get-auth-url")
-            .then((response) => response.json())
-            .then((data) => {
-              window.location.replace(data.url);
-            });
-        }
-      });
   }
 
   renderSettings() {
@@ -130,15 +129,13 @@ export default class Room extends Component {
 
   renderSettingsButton() {
     return (
-      <Grid item xs={12} align="center">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => this.updateShowSettings(true)}
-        >
-          Settings
-        </Button>
-      </Grid>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => this.updateShowSettings(true)}
+      >
+        Settings
+      </Button>
     );
   }
 
@@ -154,15 +151,17 @@ export default class Room extends Component {
           </Typography>
         </Grid>
         <MusicPlayer {...this.state.song} />
-        {this.state.isHost ? this.renderSettingsButton() : null}
         <Grid item xs={12} align="center">
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={this.leaveButtonPressed}
-          >
-            Leave Room
-          </Button>
+          <ButtonGroup disabledElevation variant="contained" color="primary">
+            {this.state.isHost ? this.renderSettingsButton() : null}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.leaveButtonPressed}
+            >
+              Leave Room
+            </Button>
+          </ButtonGroup>
         </Grid>
       </Grid>
     );
