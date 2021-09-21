@@ -25,19 +25,9 @@ body {
   transform: translate(-50%, -50%);
 }
 
-#background {
+#gradient {
   width: 100%;
   height: 800px;
   padding: 0px;
   margin: 0px;
-}
-
-.hole {
-  background-color: #e5e5f7;
-  opacity: 0.1;
-  background: linear-gradient(135deg, #8d6dfa55 25%, transparent 25%) -10px 0/
-      20px 20px,
-    linear-gradient(225deg, #8d6dfa 25%, transparent 25%) -10px 0/ 20px 20px,
-    linear-gradient(315deg, #8d6dfa55 25%, transparent 25%) 0px 0/ 20px 20px,
-    linear-gradient(45deg, #8d6dfa 25%, #e5e5f7 25%) 0px 0/ 20px 20px;
 }
